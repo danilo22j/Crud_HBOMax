@@ -15,6 +15,7 @@ public class crud_Perfiles {
         return emf.createEntityManager();
     }
     
+    //Crear o Insertar
     public void crear(Perfiles nuevoPerfil) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -32,6 +33,7 @@ public class crud_Perfiles {
         }
     }
     
+    //Mostrar o Leer
     public List<Perfiles> leerTodos() {
         EntityManager em = emf.createEntityManager();
         try {
@@ -41,6 +43,7 @@ public class crud_Perfiles {
         }
     }
     
+    //Buscar
     public Perfiles buscarPorId(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -50,6 +53,7 @@ public class crud_Perfiles {
         }
     }
     
+    //Actualizar o Modificar
     public void actualizar(Perfiles perfilModificado) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -67,6 +71,7 @@ public class crud_Perfiles {
         }
     }
     
+    //Eliminar
     public void eliminar(int id) {
         EntityManager em = emf.createEntityManager();
         try {

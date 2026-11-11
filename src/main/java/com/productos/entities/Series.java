@@ -1,9 +1,9 @@
-
 package com.productos.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +23,7 @@ public class Series {
     private String nombre;
     
     // RELACIÓN: Una serie tiene muchas temporadas
-    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Temporadas> temporadas;
 
     public Series() {

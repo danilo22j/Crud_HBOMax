@@ -179,7 +179,8 @@ public class CRUD_HBOMax {
             System.out.println("2. Listar todas las Series");
             System.out.println("3. Modificar una Serie por ID");
             System.out.println("4. Eliminar una Serie por ID");
-            System.out.println("5. Volver al menu principal");
+            System.out.println("5. Catalogo de Series con busqueda");
+            System.out.println("6. Volver al menu principal");
             System.out.print("Seleccione una opcion: ");
 
             opcionSub = teclado.nextInt();
@@ -195,21 +196,39 @@ public class CRUD_HBOMax {
                     Series nuevaSerie = new Series(nombreSer);
                     crudSerie.crear(nuevaSerie);
                     break;
-
                 case 2:
                     System.out.println("\nCatalogo de Series");
                     List<Series> series = crudSerie.leerTodas();
                     if (series.isEmpty()) {
                         System.out.println("No hay series registradas en la base de datos.");
                     } else {
-                        System.out.println("----------------------------------------");
+                        System.out.println("--------------------------------------------------");
                         for (Series s : series) {
                             System.out.println("ID: " + s.getId() + " | Titulo: " + s.getNombre());
+
+                            //Verificar y recorrer las temporadas de la serie
+                            if (s.getTemporadas() == null || s.getTemporadas().isEmpty()) {
+                                System.out.println("   (Sin temporadas registradas)");
+                            } else {
+                                for (Temporadas t : s.getTemporadas()) {
+                                    System.out.println("   -> Temporada " + t.getNumeroTemporada());
+
+                                    // Verificar y recorrer los episodios de cada temporada
+                                    if (t.getEpisodios() == null || t.getEpisodios().isEmpty()) {
+                                        System.out.println("      (Sin episodios registrados)");
+                                    } else {
+                                        for (Episodios e : t.getEpisodios()) {
+                                            System.out.println("      * Ep. " + e.getNumeroEpisodio()
+                                                    + ": " + e.getNombre()
+                                                    + " (" + e.getDuracion() + " min)");
+                                        }
+                                    }
+                                }
+                            }
+                            System.out.println("--------------------------------------------------");
                         }
-                        System.out.println("----------------------------------------");
                     }
                     break;
-
                 case 3:
                     System.out.println("\nModificar la Serie");
                     System.out.print("Ingrese el ID de la serie a actualizar: ");
@@ -232,13 +251,52 @@ public class CRUD_HBOMax {
                     break;
 
                 case 5:
+                    System.out.println("\nCatalogo de Series con busqueda");
+                    System.out.print("Buscar por titulo (presione Enter para ver todas): ");
+                    String filtro = teclado.nextLine(); // Si usas Scanner llamado 'sc'
+
+                    System.out.print("Numero de pagina (ej. 1): ");
+                    int pagina = Integer.parseInt(teclado.nextLine());
+                    int registrosPorPagina = 5;
+
+                    List<Series> listaSeries = crudSerie.listarSeriesFiltradas(filtro, pagina, registrosPorPagina);
+
+                    if (listaSeries.isEmpty()) {
+                        System.out.println("No se encontraron series con esos criterios.");
+                    } else {
+                        System.out.println("--------------------------------------------------");
+                        for (Series s : listaSeries) {
+                            System.out.println("ID: " + s.getId() + " | Titulo: " + s.getNombre());
+
+                            if (s.getTemporadas() == null || s.getTemporadas().isEmpty()) {
+                                System.out.println("   (Sin temporadas registradas)");
+                            } else {
+                                for (Temporadas t : s.getTemporadas()) {
+                                    System.out.println("   -> Temporada " + t.getNumeroTemporada());
+
+                                    if (t.getEpisodios() == null || t.getEpisodios().isEmpty()) {
+                                        System.out.println("      (Sin episodios registrados)");
+                                    } else {
+                                        for (Episodios e : t.getEpisodios()) {
+                                            System.out.println("      * Ep. " + e.getNumeroEpisodio()
+                                                    + ": " + e.getNombre()
+                                                    + " (" + e.getDuracion() + " min)");
+                                        }
+                                    }
+                                }
+                            }
+                            System.out.println("--------------------------------------------------");
+                        }
+                    }
+                    break;
+                case 6:
                     System.out.println("Regresando al menu principal...");
                     break;
 
                 default:
                     System.out.println("Opción invalida.");
             }
-        } while (opcionSub != 5);
+        } while (opcionSub != 6);
     }
 
     private static void menuTempordas(Scanner teclado, crud_Temporadas crudTem, crud_Series crudSerie) {
@@ -254,7 +312,7 @@ public class CRUD_HBOMax {
 
             if (teclado.hasNextInt()) {
                 opcionSub = teclado.nextInt();
-                teclado.nextLine(); // Limpiar búfer
+                teclado.nextLine();
 
                 switch (opcionSub) {
                     case 1:
@@ -359,7 +417,7 @@ public class CRUD_HBOMax {
 
             if (teclado.hasNextInt()) {
                 opcionSub = teclado.nextInt();
-                teclado.nextLine(); // Limpiar búfer
+                teclado.nextLine(); 
 
                 switch (opcionSub) {
                     case 1:
@@ -480,7 +538,7 @@ public class CRUD_HBOMax {
 
             if (teclado.hasNextInt()) {
                 opcionSub = teclado.nextInt();
-                teclado.nextLine(); // Limpiar búfer
+                teclado.nextLine();
 
                 switch (opcionSub) {
                     case 1:
@@ -507,16 +565,28 @@ public class CRUD_HBOMax {
                         break;
 
                     case 2:
-                        System.out.println("\nListado de Cuentas de Usuarios]");
+                        System.out.println("\nListado de Cuentas de Usuarios");
                         List<Usuarios> listaUser = crudUser.leerTodos();
                         if (listaUser.isEmpty()) {
-                            System.out.println("No hay usuarios registrados en el sistema.");
+                            System.out.println("No hay usuarios registrados en la base de datos.");
                         } else {
-                            System.out.println("--------------------------------------------------------------------------------");
+                            System.out.println("-------------------------------------------------------------------------");
                             for (Usuarios u : listaUser) {
-                                System.out.println("ID: " + u.getId() + " | Nombre: " + u.getNombres() + " | Email: " + u.getEmail() + " | Estado: " + u.getEstado());
+                                System.out.println("ID: " + u.getId()
+                                        + " | Nombre: " + u.getNombres()
+                                        + " | Email: " + u.getEmail()
+                                        + " | Estado: " + u.getEstado());
+
+                                if (u.getPerfiles() == null || u.getPerfiles().isEmpty()) {
+                                    System.out.println("   (Sin perfiles creados)");
+                                } else {
+                                    for (Perfiles p : u.getPerfiles()) {
+                                        String tipo = p.isEsKids() ? "Kids" : "Adulto";
+                                        System.out.println("   -> Perfil: " + p.getNombre() + " [" + tipo + "]");
+                                    }
+                                }
+                                System.out.println("-------------------------------------------------------------------------");
                             }
-                            System.out.println("--------------------------------------------------------------------------------");
                         }
                         break;
 
@@ -763,21 +833,30 @@ public class CRUD_HBOMax {
                         if (listaHist.isEmpty()) {
                             System.out.println("No hay registros en el historial.");
                         } else {
-                            System.out.println("--------------------------------------------------------------------------------");
+                            System.out.println("------------------------------------------------------------------------------------------------------------------------");
                             for (Historial_Reproduccion h : listaHist) {
                                 String nombrePerf = (h.getPerfil() != null) ? h.getPerfil().getNombre() : "Anonimo";
                                 String contenido = "Contenido desconocido";
+
                                 if (h.getPelicula() != null) {
-                                    contenido = "Pelicula: " + h.getPelicula().getTitulo();
+                                    contenido = "PelIcula: " + h.getPelicula().getTitulo();
                                 } else if (h.getEpisodio() != null) {
-                                    contenido = "Episodio: " + h.getEpisodio().getNombre();
+                                    // Navegamos por las relaciones: Episodio - Temporada - Serie
+                                    var epi = h.getEpisodio();
+                                    var temp = epi.getTemporada();
+                                    var serie = (temp != null) ? temp.getSerie() : null;
+
+                                    String nombreSerie = (serie != null) ? serie.getNombre() : "Serie desconocida";
+                                    int numTemporada = (temp != null) ? temp.getNumeroTemporada() : 0;
+
+                                    contenido = "Serie: " + nombreSerie + " | Temp: " + numTemporada + " | Ep " + epi.getNumeroEpisodio() + ": " + epi.getNombre();
                                 }
-                                System.out.println("ID Historial: " + h.getId() + " | Perfil: " + nombrePerf + " | Viendo: " + contenido + " | Min. Pausa: " + h.getMinutoPausa() + " | Fecha: " + h.getFechaUltimaVista());
+
+                                System.out.println("ID Historial: " + h.getId() + " | Perfil: " + nombrePerf + " | Viendo: [ " + contenido + " ] | Minuto Pausa: " + h.getMinutoPausa());
                             }
-                            System.out.println("--------------------------------------------------------------------------------");
+                            System.out.println("------------------------------------------------------------------------------------------------------------------------");
                         }
                         break;
-
                     case 3:
                         System.out.println("\nActualizar Progreso");
                         System.out.print("Ingrese el ID del registro de historial a modificar: ");

@@ -1,6 +1,8 @@
 package com.productos.crud;
 
 import com.productos.entities.Series;
+import com.productos.entities.Temporadas;
+import com.productos.entities.Episodios;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -13,7 +15,8 @@ public class crud_Series {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
+    
+    //Ingresar o Crear
     public void crear(Series nuevaSerie) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -31,17 +34,29 @@ public class crud_Series {
         }
     }
 
-    // 2. READ ALL (Listar todas las series registradas)
+    //Leer o Mostrar
     public List<Series> leerTodas() {
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT s FROM Series s", Series.class).getResultList();
+            //Trae las series con sus temporadas
+            List<Series> series = em.createQuery(
+                    "SELECT DISTINCT s FROM Series s LEFT JOIN FETCH s.temporadas", Series.class)
+                    .getResultList();
+
+            //Carga los episodios de esas temporadas en la misma sesion
+            if (!series.isEmpty()) {
+                em.createQuery(
+                        "SELECT DISTINCT t FROM Temporadas t LEFT JOIN FETCH t.episodios WHERE t.serie IN :series", Temporadas.class)
+                        .setParameter("series", series)
+                        .getResultList();
+            }
+            return series;
         } finally {
             em.close();
         }
     }
 
-    // 3. READ BY ID (Buscar una serie específica)
+    //Buscar 
     public Series buscarPorId(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -51,7 +66,7 @@ public class crud_Series {
         }
     }
 
-    // 4. UPDATE (Modificar el nombre de la serie)
+    //Actualizar o Modificar
     public void modificar(int id, String nuevoNombre) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -74,7 +89,7 @@ public class crud_Series {
         }
     }
 
-    // 5. DELETE (Eliminar una serie)
+    //Eliminar
     public void eliminar(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -92,6 +107,40 @@ public class crud_Series {
                 em.getTransaction().rollback();
             }
             e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+    
+    //Lista de catalogo por Busqueda y Ordenada 
+    public List<Series> listarSeriesFiltradas(String filtroNombre, int pagina, int tamanoPagina) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            //Consulta JPQL con filtro, ordenamiento y paginación
+            String jpql = "SELECT s FROM Series s "
+                    + "WHERE LOWER(s.nombre) LIKE LOWER(:filtro) "
+                    + "ORDER BY s.nombre ASC";
+
+            int primerRegistro = (pagina - 1) * tamanoPagina;
+
+            List<Series> listaSeries = em.createQuery(jpql, Series.class)
+                    .setParameter("filtro", "%" + filtroNombre + "%")
+                    .setFirstResult(primerRegistro)
+                    .setMaxResults(tamanoPagina)
+                    .getResultList();
+
+            //Cargar temporadas y episodios con JPQL para esas series
+            if (!listaSeries.isEmpty()) {
+                em.createQuery("SELECT DISTINCT s FROM Series s LEFT JOIN FETCH s.temporadas WHERE s IN :series", Series.class)
+                        .setParameter("series", listaSeries)
+                        .getResultList();
+
+                em.createQuery("SELECT DISTINCT t FROM Temporadas t LEFT JOIN FETCH t.episodios WHERE t.serie IN :series", Temporadas.class)
+                        .setParameter("series", listaSeries)
+                        .getResultList();
+            }
+
+            return listaSeries;
         } finally {
             em.close();
         }

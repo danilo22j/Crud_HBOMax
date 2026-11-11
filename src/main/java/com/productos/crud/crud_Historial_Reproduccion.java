@@ -1,4 +1,3 @@
-
 package com.productos.crud;
 
 import com.productos.entities.Historial_Reproduccion;
@@ -7,15 +6,15 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.util.List;
 
-
 public class crud_Historial_Reproduccion {
-    
+
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.productos_CRUD_HBOMax_jar_1.0-SNAPSHOTPU");
-    
+
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
+
+    //Crear o Insertar
     public void crear(Historial_Reproduccion nuevoHistorial) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -32,16 +31,25 @@ public class crud_Historial_Reproduccion {
             em.close();
         }
     }
-    
+
+    //Mostrar o Leer
     public List<Historial_Reproduccion> leerTodos() {
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT h FROM Historial_Reproduccion h", Historial_Reproduccion.class).getResultList();
+            String jpql = "SELECT h FROM Historial_Reproduccion h "
+                    + "LEFT JOIN FETCH h.episodio e "
+                    + "LEFT JOIN FETCH e.temporada t "
+                    + "LEFT JOIN FETCH t.serie s "
+                    + "LEFT JOIN FETCH h.pelicula p "
+                    + "LEFT JOIN FETCH h.perfil prof";
+
+            return em.createQuery(jpql, Historial_Reproduccion.class).getResultList();
         } finally {
             em.close();
         }
     }
-    
+
+    //Buscar
     public Historial_Reproduccion buscarPorId(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -50,7 +58,8 @@ public class crud_Historial_Reproduccion {
             em.close();
         }
     }
-    
+
+    //Actualizar o Modificar
     public void actualizar(Historial_Reproduccion historialModificado) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -67,7 +76,8 @@ public class crud_Historial_Reproduccion {
             em.close();
         }
     }
-    
+
+    //Eliminar
     public void eliminar(int id) {
         EntityManager em = emf.createEntityManager();
         try {

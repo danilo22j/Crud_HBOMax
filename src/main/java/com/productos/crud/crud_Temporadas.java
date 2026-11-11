@@ -14,6 +14,7 @@ public class crud_Temporadas {
         return emf.createEntityManager();
     }
 
+    //Crear o Insertar
     public void crear(Temporadas nuevaTemporada) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -31,6 +32,7 @@ public class crud_Temporadas {
         }
     }
 
+    //Leer o Mostrar
     public List<Temporadas> leerTodas() {
         EntityManager em = emf.createEntityManager();
         try {
@@ -40,6 +42,7 @@ public class crud_Temporadas {
         }
     }
     
+    //Buscar
     public Temporadas buscarPorId(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -49,6 +52,7 @@ public class crud_Temporadas {
         }
     }
     
+    //Actualizar o Modificar
     public void actualizar(Temporadas temporadaModificada) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -66,6 +70,7 @@ public class crud_Temporadas {
         }
     }
     
+    //Eliminar
     public void eliminar(int id) {
         EntityManager em = emf.createEntityManager();
         try {

@@ -1,0 +1,15 @@
+com\productos\entities\Historial_Reproduccion.class
+com\productos\entities\Perfiles.class
+com\productos\entities\Temporadas.class
+com\productos\entities\Usuarios.class
+com\productos\crud\crud_Peliculas.class
+com\productos\entities\Series.class
+com\productos\crud_hbomax\CRUD_HBOMax.class
+com\productos\entities\Episodios.class
+com\productos\entities\Peliculas.class
+com\productos\crud\crud_Episodios.class
+com\productos\crud\crud_Perfiles.class
+com\productos\crud\crud_Series.class
+com\productos\crud\crud_Usuarios.class
+com\productos\crud\crud_Temporadas.class
+com\productos\crud\crud_Historial_Reproduccion.class

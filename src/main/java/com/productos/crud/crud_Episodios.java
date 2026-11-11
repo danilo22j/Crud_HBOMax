@@ -13,7 +13,8 @@ public class crud_Episodios {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
+
+    //Insertar o Crear
     public void crear(Episodios nuevoEpisodio) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -31,6 +32,7 @@ public class crud_Episodios {
         }
     }
     
+    //Leer o Mostrar
     public List<Episodios> leerTodos() {
         EntityManager em = emf.createEntityManager();
         try {
@@ -39,7 +41,8 @@ public class crud_Episodios {
             em.close();
         }
     }
-    
+
+    //Buscar
     public Episodios buscarPorId(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -48,7 +51,8 @@ public class crud_Episodios {
             em.close();
         }
     }
-    
+
+    //Actualizar o Modificar
     public void actualizar(Episodios episodioModificado) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -65,7 +69,8 @@ public class crud_Episodios {
             em.close();
         }
     }
-    
+
+    //Eliminar
     public void eliminar(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -74,7 +79,7 @@ public class crud_Episodios {
             if (epiAEliminar != null) {
                 em.remove(epiAEliminar);
                 em.getTransaction().commit();
-                System.out.println("¡Episodio eliminado con exito!");
+                System.out.println("Episodio eliminado con exito!");
             } else {
                 System.out.println("No se encontro ningun episodio con el ID proporcionado.");
             }

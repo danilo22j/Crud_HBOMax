@@ -14,6 +14,7 @@ public class crud_Usuarios {
         return emf.createEntityManager();
     }
 
+    //Crear o Insertar
     public void crear(Usuarios nuevoUsuario) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -31,15 +32,20 @@ public class crud_Usuarios {
         }
     }
 
+    //Mostrar o Leer
     public List<Usuarios> leerTodos() {
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT u FROM Usuarios u", Usuarios.class).getResultList();
+            String jpql = "SELECT DISTINCT u FROM Usuarios u "
+                    + "LEFT JOIN FETCH u.perfiles "
+                    + "ORDER BY u.nombres ASC";
+            return em.createQuery(jpql, Usuarios.class).getResultList();
         } finally {
             em.close();
         }
     }
 
+    //Buscar
     public Usuarios buscarPorId(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -49,6 +55,7 @@ public class crud_Usuarios {
         }
     }
 
+    //Actualizar o Modificar
     public void actualizar(Usuarios usuarioModificado) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -66,6 +73,7 @@ public class crud_Usuarios {
         }
     }
 
+    //Eliminar
     public void eliminar(int id) {
         EntityManager em = emf.createEntityManager();
         try {

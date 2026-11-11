@@ -14,7 +14,7 @@ public class crud_Peliculas {
         return emf.createEntityManager();
     }
     
-    //Ingresar
+    //Ingresar o Crear
     public void crear(Peliculas p) {
         EntityManager em = getEntityManager();
         try {
